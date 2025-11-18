@@ -1,126 +1,193 @@
-# bybit_p2p
-## Bybit P2P API integration library written in Python
+# bybit_p2p_async
+## Асинхронная библиотека интеграции с Bybit P2P API, написанная на Python
 
-[![pip package](https://img.shields.io/pypi/v/bybit-p2p)](https://pypi.org/project/bybit-p2p/)
+`bybit_p2p_async` - is an asynchronous fork of the official Python SDK for the Bybit P2P API, enabling seamless integration of your software solutions with the [Bybit P2P Platform](https://www.bybit.com/en/promo/global/p2p-introduce).
 
-[Этот файл доступен на русском языке!](https://github.com/bybit-exchange/bybit_p2p/blob/master/README_RU.md)
+* No need to manually implement request signing mechanisms (HMAC, RSA)
+* Simple and user-friendly
+* Actively developed and maintained
+* Compatible with asynchronous programming
+* Returns structured data using classes
 
-`bybit_p2p` is the official Python SDK for Bybit's P2P API, enabling seamless integration of your software solutions with Bybit's [P2P trading platform](https://www.bybit.com/en/promo/global/p2p-introduce).
-
-- No need to implement signature (HMAC, RSA) logic yourself
-- Easy & quick to work with
-- Actively developed and maintained
-
-*originally developed by kolya5544*
+*the original synchronous version was developed by kolya5544*
 
 ## Features
 
-bybit_p2p currently implements all methods available for P2P API. The library is in active development, so any newly released features will be added almost immediately. Here is a short list of what the library can do:
+bybit_p2p_async currently does not implement all methods available in the P2P API. The library is under active development, and missing endpoints will be added gradually. Below is a list of currently supported features:
 
-- Create, edit, delete, activate advertisements
-- Get pending orders, mark orders as paid, release assets to the buyer
-- Get and send text messages, upload files and send files to the chat
-- Get all public advertisements for tokens
-- ...and so much more! 🌟
+* Retrieve account information
+* Retrieve account balance
+* Retrieve a list of account orders
+* Retrieve a list of available P2P market orders
 
-All features are usually one method call away and do not require advanced API understanding to interact with.
+All functions are typically accessible via a single method call and do not require deep API knowledge to use.
 
-## Tech
+## Technologies
 
-bybit_p2p uses a number of projects and technologies to work:
+bybit_p2p_async leverages a number of technologies and libraries:
 
-- `requests` & `requests_toolbelt` for HTTP request creation and processing, as well as multiform data requests
-- `PyCrypto` for HMAC and RSA operations
+* `aiohttp` and `aiofiles` for creating and processing HTTP requests, including multipart/form-data
+* `pycryptodome` for HMAC and RSA operations
 
 ## Installation
 
-`bybit_p2p` was tested on Python 3.11, but should work on all higher versions as well. The module can be installed manually or via [PyPI](https://pypi.org/project/pybit/) with `pip`:
-```
-pip install bybit-p2p
-```
+`bybit_p2p_async` was tested on Python 3.11 but should work on all newer versions. The module can be installed manually.
 
 ## Usage
 
-Upon installation, you can use bybit_p2p by importing it in your code:
+Once installed, you can import and use bybit_p2p_async in your code:
+
 ```
-from bybit_p2p import P2P
-```
-
-Here is a quickstart example to get some info from the exchange:
-```
-from bybit_p2p import P2P
-
-api = P2P(
-    testnet=True,
-    api_key="x",
-    api_secret="x"
-)
-
-# 1. Get current balance
-print(api.get_current_balance(accountType="FUND", coin="USDC"))
-
-# 2. Get account information
-print(api.get_account_information())
-
-# 3. Get ads list
-print(api.get_ads_list())
+from bybit_p2p_async import P2P
 ```
 
-`P2P()` class is used for P2P API interactions. Here, `testnet` refers to environment. For Mainnet (https://bybit.com/), you shall use `testnet=False`. For Testnet (https://testnet.bybit.com/), use `testnet=True` instead.
+Here is an example:
 
-RSA users should also set `rsa=True` in the constructor. TR/KZ/NL/etc. users can manipulate `domain` and `tld` parameters, like `tld="kz"`.
+```
+import asyncio
 
-You can find the complete Quickstart example here: [bybit_p2p quickstart](https://github.com/bybit-exchange/bybit_p2p/blob/master/examples/quickstart.py).
+from bybit_p2p_async import P2P
+
+
+async def main():
+    api = P2P(
+        api_key="x",
+        api_secret="x"
+    )
+
+    # 1. Get account information.
+    status, data = await api.get_account_information()
+
+    if status:
+        print(f"Nickname: {data.nickname}")
+        print(f"Real Name: {data.real_name}")
+        print(f"User ID: {data.user_id}")
+        print(f"Orders: {data.order_num}")
+        print()
+
+    # 2. Get account balance.
+    status, data = await api.get_current_balance(
+        account_type="FUND",
+        coins=["USDT", "USDC", "BTC"]
+    )
+
+    if status:
+        account_type, member_id, coins = data
+        print(f"User ID: {member_id}")
+        print(f"Account: {account_type}")
+        print("=" * 10)
+        for coin in coins:
+            print(f"{coin.name}")
+            print(f"Wallet balance: {coin.wallet_balance}")
+            print(f"Transfer balance: {coin.transfer_balance}")
+            
+            if coin.bonus is not None:
+                print(f"Bonus: {coin.bonus}")
+
+            print("-" * 8)
+            print()
+
+
+    # 3. Get account ads.
+    status, data = await api.get_ads_list(
+        available=False,
+        side="buy",
+        token_id="USDT",
+        size=5,
+        currency_id="USD"
+    )
+
+    if status:
+        count, hidden, ads = data
+        print(f"Retrieved orders: {count}")
+        print(f"Hidden: {'Yes' if hidden else 'No'}")
+        print("=" * 10)
+        for ad in ads:
+            print(f"Pair: {ad.token_name}/{ad.currency_id}")
+            print(f"Price: {ad.price}")
+            print(f"Quantity: {ad.quantity}")
+            print(f"Remark: {ad.remark}")
+
+            print("-" * 8)
+
+        print()
+
+    # 4. Get market ads.
+    status, data = await api.get_market_ads(
+        amount=5000,
+        bulk_maker=True,
+        va_maker=True,
+        can_trade=True,
+        currency_id="USD",
+        token_id="USDT",
+        side="sell",
+        sort_type="TRADE_PRICE"
+    )
+
+    if status:
+        count, ads = data
+        print(f"Total ads: {count}")
+        print("=" * 10)
+
+        print("=" * 10)
+        for ad in ads:
+            print(f"Pair: {ad.token_id}/{ad.currency_id}")
+            print(f"Price: {ad.price}")
+            print(f"Quantity: {ad.quantity}")
+            print(f"Remark: {ad.remark}")
+
+            print("-" * 8)
+
+        print()
+
+
+    await api.close_session()
+
+if __name__ == "__main__":
+    asyncio.run(main())
+
+```
+
+The P2P() class is used to interact with the P2P API. The testnet parameter indicates the environment.
+For Mainnet ([https://bybit.com/](https://bybit.com/)), use `testnet=False`.
+For Testnet ([https://testnet.bybit.com/](https://testnet.bybit.com/)), use `testnet=True`.
+
+RSA users should also set `rsa=True` in the constructor. Users from regions like TR/KZ/NL/etc. can customize the `domain` and `tld ` parameters, e.g., `tld="kz"`.
+
+A full working example is available here: [bybit_p2p_async quickstart](https://github.com/TokenatorObmenator/bybit_p2p_async/blob/master/examples/quickstart.py).
 
 ## Documentation
 
-bybit_p2p library currently consists of just one module, which is used for direct REST API requests to Bybit P2P API.
+The bybit_p2p_async library currently consists of a single module used for direct REST requests to the Bybit P2P API.
 
-You can access P2P API documentation using this link: [P2P API documentation](https://bybit-exchange.github.io/docs/p2p/guide)
+You can access the P2P API documentation here: [P2P API documentation](https://bybit-exchange.github.io/docs/p2p/guide)
 
-Here is a breakdown of how API methods correspond to appropriate bybit_p2p methods:
+Below is the mapping between API methods and bybit_p2p methods:
 
-Advertisements:
-| bybit_p2p method name | P2P API method name | P2P API endpoint path |
-| --- | --- | --- |
-| get_online_ads() | Get Ads | [/v5/p2p/item/online](https://bybit-exchange.github.io/docs/p2p/ad/online-ad-list) |
-| post_new_ad() | Post Ad | [/v5/p2p/item/create](https://bybit-exchange.github.io/docs/p2p/ad/post-new-ad) |
-| remove_ad() | Remove Ad | [/v5/p2p/item/cancel](https://bybit-exchange.github.io/docs/p2p/ad/remove-ad) |
-| update_ad() | Update / Relist Ad | [/v5/p2p/item/update](https://bybit-exchange.github.io/docs/p2p/ad/update-list-ad) |
-| get_ads_list() | Get My Ads | [/v5/p2p/item/personal/list](https://bybit-exchange.github.io/docs/p2p/ad/ad-list) |
-| get_ad_details() | Get My Ad Details | [/v5/p2p/item/info](https://bybit-exchange.github.io/docs/p2p/ad/ad-detail) |
+Объявления:
 
-Orders:
-| bybit_p2p method name | P2P API method name | P2P API endpoint path |
-| --- | --- | --- |
-| get_orders() | Get All Orders | [/v5/p2p/order/simplifyList](https://bybit-exchange.github.io/docs/p2p/order/order-list) |
-| get_order_details() | Get Order Details | [/v5/p2p/order/info](https://bybit-exchange.github.io/docs/p2p/order/order-detail) |
-| get_pending_orders() | Get Pending Orders | [/v5/p2p/order/pending/simplifyList](https://bybit-exchange.github.io/docs/p2p/order/pending-order) |
-| mark_as_paid() | Mark Order as Paid | [/v5/p2p/order/pay](https://bybit-exchange.github.io/docs/p2p/order/mark-order-as-paid) |
-| release_assets() | Release Assets | [/v5/p2p/order/finish](https://bybit-exchange.github.io/docs/p2p/order/release-digital-asset) |
-| send_chat_message() | Send Chat Message | [/v5/p2p/order/message/send](https://bybit-exchange.github.io/docs/p2p/order/send-chat-msg) |
-| upload_chat_file() | Upload Chat File | [/v5/p2p/oss/upload_file](https://bybit-exchange.github.io/docs/p2p/order/upload-chat-file) |
-| get_chat_messages() | Get Chat Message | [/v5/p2p/order/message/listpage](https://bybit-exchange.github.io/docs/p2p/order/chat-msg) |
+| имя метода bybit_p2p | имя метода P2P API | Путь эндпоинта P2P API                                                             |
+| --------------------- | ------------------ | ---------------------------------------------------------------------------------- |
+| get_online_ads()    | Get all ads            | [/v5/p2p/item/online](https://bybit-exchange.github.io/docs/p2p/ad/online-ad-list) |
+| get_ads_list()      | Get your ads         | [/v5/p2p/item/personal/list](https://bybit-exchange.github.io/docs/p2p/ad/ad-list) |
+
+Ордера:
 
 
-User:
-| bybit_p2p method name | P2P API method name | P2P API endpoint path |
-| --- | --- | --- |
-| get_account_information() | Get Account Information | [/v5/p2p/user/personal/info](https://bybit-exchange.github.io/docs/p2p/user/acct-info) |
-| get_counterparty_info() | Get Counterparty User Info | [/v5/p2p/user/order/personal/info](https://bybit-exchange.github.io/docs/p2p/user/counterparty-user-info) |
-| get_user_payment_types() | Get User Payment | [/v5/p2p/user/payment/list](https://bybit-exchange.github.io/docs/p2p/user/user-payment) |
+Пользователь:
 
-Misc:
-| bybit_p2p method name | P2P API method name | P2P API endpoint path |
-| --- | --- | --- |
-| get_current_balance() | Get Coin Balance | [/v5/asset/transfer/query-account-coins-balance](https://bybit-exchange.github.io/docs/p2p/all-balance) |
+| имя метода bybit_p2p       | Get current user information         | Путь эндпоинта P2P API                                                                                    |
+| --------------------------- | -------------------------- | --------------------------------------------------------------------------------------------------------- |
+| get_account_information() | Получить информацию о текущем пользователе    | [/v5/p2p/user/personal/info](https://bybit-exchange.github.io/docs/p2p/user/acct-info)                    |
 
-More methods will come soon, allowing for more advanced operations.
 
-## Development
+Разное:
 
-All contributions are welcome.
+| имя метода bybit_p2p   | имя метода P2P API | Путь эндпоинта P2P API                                                                                  |
+| ----------------------- | ------------------ | ------------------------------------------------------------------------------------------------------- |
+| get_current_balance() | Get coin balances | [/v5/asset/transfer/query-account-coins-balance](https://bybit-exchange.github.io/docs/p2p/all-balance) |
+| get_market_ads() | Get ads list from P2P market | /v5/p2p/item/online |
 
-## License
+## Лицензия
 
 MIT

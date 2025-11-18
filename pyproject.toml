@@ -1,16 +1,13 @@
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
 [project]
-name = "bybit_p2p"
-version = "1.2.0"
+name = "bybit_p2p_async"
+version = "1.0.0"
 authors = [
-  { name="Nickolay Kushnarenko", email="kolya@nk.ax" },
+  { name="Tokenator Exchange", email="contact@tokenator.ru" },
+  { name="Kirill Suvorov", email="herbalsomml@gmail.com" }
 ]
-description = "Official Bybit P2P API integration library written in Python."
+description = "An asynchronous fork of the official ByBit P2P API integration library written in Python."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
@@ -18,16 +15,11 @@ classifiers = [
 license = "MIT"
 license-files = ["LICEN[CS]E*"]
 dependencies = [
-  "requests",
-  "requests_toolbelt",
+  "aiofiles",
+  "aiohttp",
   "pycryptodome"
 ]
 
 [project.urls]
-Homepage = "https://github.com/bybit-exchange/bybit_p2p"
-Issues = "https://github.com/bybit-exchange/bybit_p2p/issues"
-
-[dependency-groups]
-dev = [
-    "pytest>=8.4.0",
-]
+Homepage = "https://github.com/TokenatorObmenator/bybit_p2p_async"
+Issues = "https://github.com/TokenatorObmenator/bybit_p2p_async/issues"
