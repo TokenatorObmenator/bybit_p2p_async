@@ -1,5 +1,5 @@
 # bybit_p2p_async
-## Асинхронная библиотека интеграции с Bybit P2P API, написанная на Python
+## Asynchronous library for integration with Bybit P2P API, written in Python
 
 [![pip package](https://img.shields.io/pypi/v/bybit-p2p-async)](https://pypi.org/project/bybit-p2p-async/)
 
