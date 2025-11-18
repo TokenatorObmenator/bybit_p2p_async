@@ -193,6 +193,6 @@ Misc:
 | get_current_balance() | Get coin balances | [/v5/asset/transfer/query-account-coins-balance](https://bybit-exchange.github.io/docs/p2p/all-balance) |
 | get_market_ads() | Get ads list from P2P market | /v5/p2p/item/online |
 
-## Лицензия
+## License
 
 MIT
