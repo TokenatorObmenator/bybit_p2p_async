@@ -171,7 +171,7 @@ Below is the mapping between API methods and bybit_p2p methods:
 
 Объявления:
 
-| имя метода bybit_p2p | имя метода P2P API | Путь эндпоинта P2P API                                                             |
+| bybit_p2p method name | P2P API method name | P2P API endpoint path |
 | --------------------- | ------------------ | ---------------------------------------------------------------------------------- |
 | get_online_ads()    | Get all ads            | [/v5/p2p/item/online](https://bybit-exchange.github.io/docs/p2p/ad/online-ad-list) |
 | get_ads_list()      | Get your ads         | [/v5/p2p/item/personal/list](https://bybit-exchange.github.io/docs/p2p/ad/ad-list) |
@@ -181,14 +181,14 @@ Below is the mapping between API methods and bybit_p2p methods:
 
 Пользователь:
 
-| имя метода bybit_p2p       | Get current user information         | Путь эндпоинта P2P API                                                                                    |
+| bybit_p2p method name | P2P API method name | P2P API endpoint path |
 | --------------------------- | -------------------------- | --------------------------------------------------------------------------------------------------------- |
 | get_account_information() | Получить информацию о текущем пользователе    | [/v5/p2p/user/personal/info](https://bybit-exchange.github.io/docs/p2p/user/acct-info)                    |
 
 
 Разное:
 
-| имя метода bybit_p2p   | имя метода P2P API | Путь эндпоинта P2P API                                                                                  |
+| bybit_p2p method name | P2P API method name | P2P API endpoint path |
 | ----------------------- | ------------------ | ------------------------------------------------------------------------------------------------------- |
 | get_current_balance() | Get coin balances | [/v5/asset/transfer/query-account-coins-balance](https://bybit-exchange.github.io/docs/p2p/all-balance) |
 | get_market_ads() | Get ads list from P2P market | /v5/p2p/item/online |
