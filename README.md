@@ -169,24 +169,24 @@ You can access the P2P API documentation here: [P2P API documentation](https://b
 
 Below is the mapping between API methods and bybit_p2p methods:
 
-Объявления:
+Ads:
 
 | bybit_p2p method name | P2P API method name | P2P API endpoint path |
 | --------------------- | ------------------ | ---------------------------------------------------------------------------------- |
 | get_online_ads()    | Get all ads            | [/v5/p2p/item/online](https://bybit-exchange.github.io/docs/p2p/ad/online-ad-list) |
 | get_ads_list()      | Get your ads         | [/v5/p2p/item/personal/list](https://bybit-exchange.github.io/docs/p2p/ad/ad-list) |
 
-Ордера:
+Orders:
 
 
-Пользователь:
+User:
 
 | bybit_p2p method name | P2P API method name | P2P API endpoint path |
 | --------------------------- | -------------------------- | --------------------------------------------------------------------------------------------------------- |
 | get_account_information() | Получить информацию о текущем пользователе    | [/v5/p2p/user/personal/info](https://bybit-exchange.github.io/docs/p2p/user/acct-info)                    |
 
 
-Разное:
+Misc:
 
 | bybit_p2p method name | P2P API method name | P2P API endpoint path |
 | ----------------------- | ------------------ | ------------------------------------------------------------------------------------------------------- |
