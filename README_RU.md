@@ -1,6 +1,8 @@
 # bybit_p2p_async
 ## Асинхронная библиотека интеграции с Bybit P2P API, написанная на Python
 
+[![pip package](https://img.shields.io/pypi/v/bybit-p2p-async)](https://pypi.org/project/bybit-p2p-async/)
+
 `bybit_p2p_async` - асинхронный форк официального Python SDK для P2P API Bybit, обеспечивающий интеграцию ваших программных решений с [P2P-платформой Bybit](https://www.bybit.com/en/promo/global/p2p-introduce).
 
 * Не требует самостоятельной реализации механизмов подписи запросов (HMAC, RSA)
@@ -31,7 +33,11 @@ bybit_p2p_async использует ряд проектов и технолог
 
 ## Установка
 
-`bybit_p2p_async` тестировался на Python 3.11, но должен работать и на всех более новых версиях. Модуль можно установить вручную.
+`bybit_p2p_async` тестировался на Python 3.11, но должен работать и на всех более новых версиях. Модуль можно установить вручную или через [PyPI](https://pypi.org/project/pybit/) с помощью `pip`:
+
+```
+pip install bybit-p2p-async
+```
 
 ## Использование
 
