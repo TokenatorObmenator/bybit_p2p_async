@@ -95,7 +95,7 @@ class P2PRequests(P2PManager):
         params = {
             "tokenId": token_id,
             "currencyId": currency_id,
-            "side": "0" if side == "buy" else "1",
+            "side": "1" if side == "buy" else "0",
             "verificationFilter": 2 if not verification_filter else 0,
             "vaMaker": va_maker,
             "page": str(page),
